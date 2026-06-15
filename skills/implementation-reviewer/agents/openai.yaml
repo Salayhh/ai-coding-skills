@@ -1,0 +1,4 @@
+interface:
+  display_name: "Implementation Reviewer"
+  short_description: "Review implementations against plan"
+  default_prompt: "Use $implementation-reviewer to review this implementation against the plan, module boundaries, tests, and docs."

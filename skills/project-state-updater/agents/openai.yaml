@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project State Updater"
+  short_description: "Update project state after code changes"
+  default_prompt: "Use $project-state-updater to update PROJECT_STATE.md and the related plan checklist from this code change."

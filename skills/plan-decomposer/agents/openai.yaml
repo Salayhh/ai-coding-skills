@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plan Decomposer"
+  short_description: "Decompose AI plans into staged checklists"
+  default_prompt: "Use $plan-decomposer to turn this high-level plan into staged development checklist files without writing code."

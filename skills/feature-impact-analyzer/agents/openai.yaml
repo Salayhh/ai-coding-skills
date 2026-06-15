@@ -1,0 +1,4 @@
+interface:
+  display_name: "Feature Impact Analyzer"
+  short_description: "Analyze feature impact before coding"
+  default_prompt: "Use $feature-impact-analyzer to analyze the impact of this feature before implementation."
