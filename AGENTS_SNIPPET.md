@@ -1,131 +1,61 @@
 # AGENTS.md 可复制规则片段
 
-你可以把下面内容复制到项目根目录的 `AGENTS.md` 中。
+你可以把下面的短规则复制到目标项目根目录的 `AGENTS.md` 中。
 
 ```md
-# AI Coding Project Rules
+# AI Coding Workflow Rules
 
-## Core Principle
+## 基本原则
 
-Do not optimize for producing more code. Optimize for a simple, understandable, testable, and maintainable system.
+- 优先保持系统简单、可理解、可测试、可维护。
+- 不要一次实现过大范围；每次只处理一个明确的 checklist 或 feature。
+- 修改前先说明会改哪些文件、不会改哪些文件、如何验证。
+- 不确定、需求有歧义或改动影响过大时，先停下来询问。
 
-The human owner must always be able to answer:
+## Skill 使用约定
 
-1. Where does the main flow start and end?
-2. What are the core data structures?
-3. Which modules own which responsibilities?
-4. What is the impact scope of a new feature?
-5. How can we test, log, and evaluate whether the system still works?
+- 新项目拆 plan：使用 `plan-decomposer`，生成 `plans/*.md` 和 `docs/PROJECT_STATE.md`，不要直接写代码。
+- 接手已有项目：使用 `architecture-auditor` 做只读审计，先恢复主流程、数据流和模块边界。
+- 新增功能前：使用 `feature-impact-analyzer` 分析影响范围、最小方案、测试方式和回滚方案。
+- 实现完成后：使用 `implementation-reviewer` 审查是否偏离计划、破坏边界或缺少测试。
+- 审查通过后：使用 `project-state-updater` 同步 `docs/PROJECT_STATE.md` 和对应 `plans/*.md`。
 
-## Working Modes
+## 编码边界
 
-### Plan Mode
+- 不要顺手重构无关代码。
+- 不要新增不必要文件或提前抽象。
+- 不要把外部 API 细节泄漏到 domain 层。
+- 不要把 prompt、pipeline 编排和业务逻辑混在一起。
+- 优先使用明确的数据结构，避免到处传裸 `dict`。
+- 工具函数不要隐藏文件写入、网络请求、全局状态修改等副作用。
 
-When asked to plan, do not implement code.
+## 测试与验证
 
-A valid plan must include:
-
-- project goal
-- non-goals
-- main flow
-- core data structures
-- module boundaries
-- development stages
-- testing and evaluation strategy
-- risks and rollback strategy
-
-After producing a plan, invoke or follow `skills/plan-decomposer/SKILL.md` to convert it into executable checklist files.
-
-### Implementation Mode
-
-Before coding, state:
-
-1. Which checklist item is being implemented.
-2. Which files will be changed.
-3. Which files will not be touched.
-4. Which data structures are affected.
-5. Which tests will be added or updated.
-
-Only implement one small checklist section at a time.
-
-### Review Mode
-
-After coding, invoke or follow `skills/implementation-reviewer/SKILL.md`.
-
-Review for:
-
-- deviation from plan
-- unclear module ownership
-- hidden side effects
-- duplicated logic
-- excessive file creation
-- missing tests
-- missing logs
-- outdated documentation
-
-### State Update Mode
-
-After each accepted implementation, invoke or follow `skills/project-state-updater/SKILL.md`.
-
-Update:
-
-- `docs/PROJECT_STATE.md`
-- the corresponding `plans/*.md` checklist
-
-Update other docs only if affected:
-
-- `docs/ARCHITECTURE.md`
-- `docs/DATAFLOW.md`
-- `docs/MODULE_CONTRACTS.md`
-- `docs/EVAL_AND_TESTING.md`
-- `docs/DECISIONS.md`
-
-## Architecture Rules
-
-- Keep pipeline orchestration separate from business logic.
-- Keep adapters separate from domain logic.
-- Keep prompts separate from Python control flow.
-- Prefer typed data models over unstructured dictionaries.
-- Do not let retrievers generate final answers.
-- Do not let evaluators mutate pipeline state unexpectedly.
-- Do not hide side effects inside utility functions.
-- Do not create new files unless the responsibility cannot fit clearly into an existing module.
-- Do not duplicate logic across modules.
-
-## Testing Rules
-
-Every non-trivial change must include at least one of:
+每个非平凡改动必须提供至少一种验证方式：
 
 - unit test
 - integration test
 - smoke test
-- golden query regression test
-- manual verification command
+- golden case
+- 手动验证命令
 
-If no test is added, explain why and document the risk.
+如果没有新增测试，必须说明原因和风险。
 
-## Documentation Rules
+## 文档同步
 
-Documentation is part of the codebase.
+只更新受影响的文档：
 
-When architecture changes, update `docs/ARCHITECTURE.md`.
+- 每次接受实现后，更新 `docs/PROJECT_STATE.md`。
+- checklist 进度变化时，更新对应 `plans/*.md`。
+- 架构、数据流、模块契约、测试策略或重大决策变化时，再更新对应文档。
 
-When data flow changes, update `docs/DATAFLOW.md`.
+## 停止条件
 
-When module ownership changes, update `docs/MODULE_CONTRACTS.md`.
+遇到以下情况，先停止并请求确认：
 
-When testing or evaluation changes, update `docs/EVAL_AND_TESTING.md`.
-
-When a major irreversible technical decision is made, update `docs/DECISIONS.md`.
-
-## Stop Conditions
-
-Stop and ask for review if:
-
-- a change affects more than 5 files
-- a new abstraction is introduced
-- a core data model changes
-- a public interface changes
-- tests fail
-- the current architecture no longer matches the documentation
+- 单次改动预计超过 5 个文件
+- 核心数据结构或公开接口要改变
+- 需要引入新依赖或新抽象
+- 测试失败且原因不明确
+- 当前代码与控制文档明显不一致
 ```

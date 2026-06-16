@@ -1,4 +1,4 @@
 interface:
   display_name: "Architecture Auditor"
-  short_description: "Audit architecture without changing code"
-  default_prompt: "Use $architecture-auditor to audit this codebase read-only and generate architecture control documents."
+  short_description: "Audit architecture read-only"
+  default_prompt: "/architecture-auditor"
